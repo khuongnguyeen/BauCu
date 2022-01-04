@@ -8,28 +8,26 @@ import com.company.model.PhieuBau;
 import java.util.*;
 
 public class Main {
-    public static int p = 7919; //mod
+    public static int p = 839; //mod
     public static int g = findPrimitive(p); //phan tu sinh
-    public static int a = 3; // khoa bi mat
     public static int ok = 0;
     public static double h1 = 1; // khoa cong khai
     public static double h2 = 1; // khoa cong khai
     public static double h3 = 1; // khoa cong khai
     public static double h4 = 1; // khoa cong khai
 
-    static ArrayList<PhieuBau> dsPhieuBau = new ArrayList<PhieuBau>();
-    static ArrayList<Integer> dsNguyenTo = new ArrayList<Integer>();
-    static ArrayList<CuTri> dsKhoaRieng = new ArrayList<CuTri>();
+    static ArrayList<PhieuBau> dsPhieuBau = new ArrayList<>();
+    static ArrayList<Integer> dsNguyenTo = new ArrayList<>();
+    static ArrayList<CuTri> dsKhoaRieng = new ArrayList<>();
 
     public static void main(String[] args) {
         menu();
     }
 
     private static void menu() {
-        int select = 0;
+        int select;
         do {
-            System.out.println("Menu");
-            System.out.println("Bạn là ai ?");
+            System.out.println("***********Menu");
             System.out.println("1: Cử tri");
             System.out.println("2: Ban kiểm phiếu");
             System.out.println("3: Nhập số lượng cử tri");
@@ -43,18 +41,27 @@ public class Main {
             }
             switch (select) {
                 case 1 -> cuTri();
-                case 2 -> kiemPhieu();
+                case 2 -> {
+                    kiemPhieu();
+                    System.exit(0);
+                }
                 case 3 -> {
-                    System.out.println("Nhập :");
+                    System.out.println("Số lượng Cử Chi là:");
                     ok = new Scanner(System.in).nextInt();
                 }
                 case 4 -> {
-                    for (int i = 0; i<ok;i++){
-                        int k1 = randomNumber();
-                        int k2 = randomNumber();
-                        int k3 = randomNumber();
-                        int k4 = randomNumber();
-                        CuTri ct = new CuTri(i,k1,k2,k3,k4);
+                    inputNguyenTo(10);
+                    for (int i = 0; i < ok; i++) {
+
+                        int rnd1 = new Random().nextInt(dsNguyenTo.size() - 1);
+                        int rnd2 = new Random().nextInt(dsNguyenTo.size() - 1);
+                        int rnd3 = new Random().nextInt(dsNguyenTo.size() - 1);
+                        int rnd4 = new Random().nextInt(dsNguyenTo.size() - 1);
+                        int k1 = dsNguyenTo.get(rnd1);
+                        int k2 = dsNguyenTo.get(rnd2);
+                        int k3 = dsNguyenTo.get(rnd3);
+                        int k4 = dsNguyenTo.get(rnd4);
+                        CuTri ct = new CuTri(i, k1, k2, k3, k4);
                         dsKhoaRieng.add(ct);
                         double ka1 = power(g, k1, p);
                         double ka2 = power(g, k2, p);
@@ -65,10 +72,10 @@ public class Main {
                         h3 = (h3 * ka3) % p;
                         h4 = (h4 * ka4) % p;
                     }
-                    System.out.println("____________h1 = "+h1);
-                    System.out.println("____________h2 = "+h2);
-                    System.out.println("____________h3 = "+h3);
-                    System.out.println("____________h4 = "+h4);
+                    System.out.println("____________    X = " + h1);
+                    System.out.println("____________    Y = " + h2);
+                    System.out.println("____________    Z = " + h3);
+                    System.out.println("____________    Q = " + h4);
                 }
                 case 5 -> System.exit(0);
                 default -> System.out.println("Mời bạn nhập lại");
@@ -81,7 +88,7 @@ public class Main {
     // Hàm tìm căn nguyên nhỏ nhất của n
     // phần tử sinh
     static int findPrimitive(int n) {
-        HashSet<Integer> s = new HashSet<Integer>();
+        HashSet<Integer> s = new HashSet<>();
         if (!isPrime(n)) {
             return -1;
         }
@@ -142,72 +149,34 @@ public class Main {
 
     // Ban Kiểm Phiếu
     private static void kiemPhieu() {
-        double x1 = 1, y1 = 1, x2 = 1, x3 = 1, x4 = 1, y2 = 1, y3 = 1, y4 = 1,b1=1,b2=1,b3=1,b4=1;
+        double x1 = 1, x2 = 1, x3 = 1, x4 = 1;
         for (PhieuBau phieuBau : dsPhieuBau) {
-            x1 = (x1 * phieuBau.getM1().getX()) % p;
-            y1 = (y1 * phieuBau.getM1().getY()) % p;
-            x2 = (x2 * phieuBau.getM2().getX()) % p;
-            y2 = (y2 * phieuBau.getM2().getY()) % p;
-            x3 = (x3 * phieuBau.getM3().getX()) % p;
-            y3 = (y3 * phieuBau.getM3().getY()) % p;
-            x4 = (x4 * phieuBau.getM4().getX()) % p;
-            y4 = (y4 * phieuBau.getM4().getY()) % p;
 
-            System.out.println("*** : x1 = "+x1);
-            System.out.println("*** : x2 = "+x2);
-            System.out.println("*** : x3 = "+x3);
-            System.out.println("*** : x4 = "+x4);
+            double m12 = modInverse(phieuBau.getM1().getY(), p); //nghich dao Y
+            double m1 = (phieuBau.getM1().getX() * m12) % p;
 
-            System.out.println("*** : y1 = "+y1);
-            System.out.println("*** : y2 = "+y2);
-            System.out.println("*** : y3 = "+y3);
-            System.out.println("*** : y4 = "+y4);
+            double m22 = modInverse(phieuBau.getM2().getY(), p); //nghich dao Y
+            double m2 = (phieuBau.getM2().getX() * m22) % p;
+
+            double m32 = modInverse(phieuBau.getM3().getY(), p); //nghich dao Y
+            double m3 = (phieuBau.getM3().getX() * m32) % p;
+
+            double m42 = modInverse(phieuBau.getM4().getY(), p); //nghich dao Y
+            double m4 = (phieuBau.getM4().getX() * m42) % p;
+
+            x1 = (x1 * m1) % p;
+            x2 = (x2 * m2) % p;
+            x3 = (x3 * m3) % p;
+            x4 = (x4 * m4) % p;
 
         }
-        double m12 = modInverse(y1, p); //nghich dao Y
-        double m1 = (x1 * m12) % p; // m: ban ro
 
-        System.out.println("*** : m12 = "+m12);
-        System.out.println("*** : m1 = "+m1);
-
-        double m22 = modInverse(y2, p);
-        double m2 = (x2 * m22) % p;
-
-        System.out.println("*** : m22 = "+m22);
-        System.out.println("*** : m2 = "+m2);
-
-        double m32 = modInverse(y3, p);
-        double m3 = (x3 * m32) % p;
-
-        System.out.println("*** : m32 = "+m32);
-        System.out.println("*** : m3 = "+m3);
-
-        double m42 = modInverse(y4, p);
-        double m4 = (x4 * m42) % p;
-
-        System.out.println("*** : m42 = "+m42);
-        System.out.println("*** : m4 = "+m4);
-
-        ketQua((int) m1, "m1");
-        ketQua((int) m2, "m2");
-        ketQua((int) m3, "m3");
-        ketQua((int) m4, "m4");
-
-        //m= g^v = Y/X^a
-    }
-
-    private static void ketQua(int m, String s) {
-        List<Integer> listNumbers = phanTichSoNguyen(m);
-        // in kết quả ra màn hình
-        System.out.printf("Kết quả " + s + ": %d = ", m);
-        int size = listNumbers.size();
-        int k = 0;
-        for (int i = 0; i < size - 1; i++) {
-            System.out.print(listNumbers.get(i) + " x ");
-            k++;
+        for (int i = 1; i <= ok; i++) {
+            if (power(g, i, p) == x1) System.out.println("Ứng cử viên 1 có số phiếu là: " + i);
+            if (power(g, i, p) == x2) System.out.println("Ứng cử viên 2 có số phiếu là: " + i);
+            if (power(g, i, p) == x3) System.out.println("Ứng cử viên 3 có số phiếu là: " + i);
+            if (power(g, i, p) == x4) System.out.println("Ứng cử viên 4 có số phiếu là: " + i);
         }
-        System.out.print(listNumbers.get(size - 1));
-        System.out.println("=> v = " + (k + 1));
     }
 
     //nghịch đảo module
@@ -220,35 +189,10 @@ public class Main {
         return 0;
     }
 
-    // tính module
-    static double module(double x, double n, double p) {
-        return Math.pow(x, n) % p;
-    }
-
-    //Phân tích số nguyên thành tích các thừa số nguyên tố
-    public static List<Integer> phanTichSoNguyen(int n) {
-        int i = 2;
-        List<Integer> listNumbers = new ArrayList<Integer>();
-        // phân tích
-        while (n > 1) {
-            if (n % i == 0) {
-                n = n / i;
-                listNumbers.add(i);
-            } else {
-                i++;
-            }
-        }
-        // nếu listNumbers trống thì add n vào listNumbers
-        if (listNumbers.isEmpty()) {
-            listNumbers.add(n);
-        }
-        return listNumbers;
-    }
-
     //  Cử tri
     private static void cuTri() {
-        int select2 = 0;
-        for (int i = 0; i<ok;i++){
+        int select2;
+        for (int i = 0; i < ok; i++) {
             System.out.println("____________________________________________________");
             System.out.println("Chào mừng bạn đến với cổng bỏ phiếu điện tử của công ty Adtrue");
             System.out.println("Danh Sách ứng viên gồm:");
@@ -264,10 +208,10 @@ public class Main {
                 select2 = 10;
             }
             switch (select2) {
-                case 1 -> bauChon(i,1, 0, 0, 0);
-                case 2 -> bauChon(i,0, 1, 0, 0);
-                case 3 -> bauChon(i,0, 0, 1, 0);
-                case 4 -> bauChon(i,0, 0, 0, 1);
+                case 1 -> bauChon(i, 1, 0, 0, 0);
+                case 2 -> bauChon(i, 0, 1, 0, 0);
+                case 3 -> bauChon(i, 0, 0, 1, 0);
+                case 4 -> bauChon(i, 0, 0, 0, 1);
                 case 0 -> System.out.println("___Exit___");
                 default -> System.out.println("Ứng viên không tồn tại, vui lòng chọn lại");
             }
@@ -275,23 +219,10 @@ public class Main {
 
     }
 
-    public static int randomNumber() {
-        Random rd = new Random();
-        int x = rd.nextInt(10);
-        return x + 1;
-    }
-
-
-    public static int randomSK() {
-        Random rd = new Random();
-        int x = rd.nextInt(3);
-        return x + 1;
-    }
-
-    private static void bauChon(int i,int a, int b, int c, int d) {
+    private static void bauChon(int i, int a, int b, int c, int d) {
         CuTri ct = dsKhoaRieng.get(i);
-        PhieuBau mA = new PhieuBau(messageChild(ct.getA1(), ct.getA2(), a,h1,h2), messageChild(ct.getA1(), ct.getA3(),b,h1,h3)
-                , messageChild(ct.getA2(), ct.getA3(),c,h2,h3), messageChild(ct.getA1(), ct.getA4(),d,h1,h4));
+        PhieuBau mA = new PhieuBau(messageChild(ct.getA1(), ct.getA2(), a, h1, h2), messageChild(ct.getA1(), ct.getA3(), b, h1, h3)
+                , messageChild(ct.getA2(), ct.getA3(), c, h2, h3), messageChild(ct.getA1(), ct.getA4(), d, h1, h4));
         dsPhieuBau.add(mA);
     }
 
@@ -307,32 +238,30 @@ public class Main {
         return num3 % p;
     }
 
-    private static MaHoa messageChild(int xi,int yi,int v,double x,double y) {
-        int k = randomNumber();
-        MaHoa m = new MaHoa(power3(x, yi, g, v, p),power((int) y, xi, p));
-        System.out.println("*** : v = "+v+" x = "+x+" xi = "+xi+" yi = "+yi+" y = "+y+" mi = "+power3(x, yi, g, v, p)+" hi = "+power((int) y, xi, p));
-        return m;
+    private static MaHoa messageChild(int xi, int yi, int v, double x, double y) {
+        return new MaHoa(power3(x, yi, g, v, p), power((int) y, xi, p));
     }
 
-        static boolean checkNguyenTo(int n){
-            if(n<=2){
-                return true;
-            }else {
-                for(int i =2;i<=Math.sqrt(n);i++){
-                    if(n % i == 0)
-                        return false;
-                }
-            }
+    static boolean checkNguyenTo(int n) {
+        if (n <= 2) {
             return true;
-        }
-        static void inputNguyenTo(int n){
-        dsNguyenTo.clear();
-            for(int i = 1 ;i<n;i++){
-                if(checkNguyenTo(i)){
-                    dsNguyenTo.add(i);
-                }
+        } else {
+            for (int i = 2; i <= Math.sqrt(n); i++) {
+                if (n % i == 0)
+                    return false;
             }
         }
+        return true;
+    }
+
+    static void inputNguyenTo(int n) {
+        dsNguyenTo.clear();
+        for (int i = 1; i < n; i++) {
+            if (checkNguyenTo(i)) {
+                dsNguyenTo.add(i);
+            }
+        }
+    }
 
 
 }
