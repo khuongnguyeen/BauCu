@@ -39,7 +39,7 @@ public class ActionC extends UnicastRemoteObject implements IBanKiemPhieu {
     public MaHoa messageChild(int g,int a, int p, int v) throws RemoteException {
         int k = randomNumber();
         double h = power(g, a, p);
-        MaHoa m = new MaHoa(power(g, k, p), power3(a, k, g, v, p),h);
+        MaHoa m = new MaHoa(power(g, k, p), power3(a, k, g, v, p));
         System.out.println("*** : v = "+v+" a = "+a+" h = "+h+" k = "+k+" x = "+power(g, k, p)+" y = "+power3(a, k, g, v, p));
         return m;
     }
@@ -139,10 +139,10 @@ public class ActionC extends UnicastRemoteObject implements IBanKiemPhieu {
             y3 = (y3 * phieuBau.getM3().getY()) % p;
             x4 = (x4 * phieuBau.getM4().getX()) % p;
             y4 = (y4 * phieuBau.getM4().getY()) % p;
-            b1 = (b1 * phieuBau.getM1().getH()) % p;
-            b2 = (b2 * phieuBau.getM2().getH()) % p;
-            b3 = (b3 * phieuBau.getM3().getH()) % p;
-            b4 = (b4 * phieuBau.getM4().getH()) % p;
+//            b1 = (b1 * phieuBau.getM1().getH()) % p;
+//            b2 = (b2 * phieuBau.getM2().getH()) % p;
+//            b3 = (b3 * phieuBau.getM3().getH()) % p;
+//            b4 = (b4 * phieuBau.getM4().getH()) % p;
 
             System.out.println("*** : b1 = "+b1);
             System.out.println("*** : b2 = "+b2);

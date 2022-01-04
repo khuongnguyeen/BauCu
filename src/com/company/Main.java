@@ -1,6 +1,7 @@
 package com.company;
 
 
+import com.company.model.CuTri;
 import com.company.model.MaHoa;
 import com.company.model.PhieuBau;
 
@@ -11,10 +12,14 @@ public class Main {
     public static int g = findPrimitive(p); //phan tu sinh
     public static int a = 3; // khoa bi mat
     public static int ok = 0;
-    public static double h = power(g, a, p); // khoa cong khai
+    public static double h1 = 1; // khoa cong khai
+    public static double h2 = 1; // khoa cong khai
+    public static double h3 = 1; // khoa cong khai
+    public static double h4 = 1; // khoa cong khai
 
     static ArrayList<PhieuBau> dsPhieuBau = new ArrayList<PhieuBau>();
     static ArrayList<Integer> dsNguyenTo = new ArrayList<Integer>();
+    static ArrayList<CuTri> dsKhoaRieng = new ArrayList<CuTri>();
 
     public static void main(String[] args) {
         menu();
@@ -28,7 +33,8 @@ public class Main {
             System.out.println("1: Cử tri");
             System.out.println("2: Ban kiểm phiếu");
             System.out.println("3: Nhập số lượng cử tri");
-            System.out.println("4: Thoát chương trình");
+            System.out.println("4: Sinh khóa");
+            System.out.println("5: Thoát chương trình");
             System.out.println("Mời bạn chọn:");
             try {
                 select = new Scanner(System.in).nextInt();
@@ -42,7 +48,29 @@ public class Main {
                     System.out.println("Nhập :");
                     ok = new Scanner(System.in).nextInt();
                 }
-                case 4 -> System.exit(0);
+                case 4 -> {
+                    for (int i = 0; i<ok;i++){
+                        int k1 = randomNumber();
+                        int k2 = randomNumber();
+                        int k3 = randomNumber();
+                        int k4 = randomNumber();
+                        CuTri ct = new CuTri(i,k1,k2,k3,k4);
+                        dsKhoaRieng.add(ct);
+                        double ka1 = power(g, k1, p);
+                        double ka2 = power(g, k2, p);
+                        double ka3 = power(g, k3, p);
+                        double ka4 = power(g, k4, p);
+                        h1 = (h1 * ka1) % p;
+                        h2 = (h2 * ka2) % p;
+                        h3 = (h3 * ka3) % p;
+                        h4 = (h4 * ka4) % p;
+                    }
+                    System.out.println("____________h1 = "+h1);
+                    System.out.println("____________h2 = "+h2);
+                    System.out.println("____________h3 = "+h3);
+                    System.out.println("____________h4 = "+h4);
+                }
+                case 5 -> System.exit(0);
                 default -> System.out.println("Mời bạn nhập lại");
             }
 
@@ -124,15 +152,6 @@ public class Main {
             y3 = (y3 * phieuBau.getM3().getY()) % p;
             x4 = (x4 * phieuBau.getM4().getX()) % p;
             y4 = (y4 * phieuBau.getM4().getY()) % p;
-            b1 = (b1 * phieuBau.getM1().getH()) % p;
-            b2 = (b2 * phieuBau.getM2().getH()) % p;
-            b3 = (b3 * phieuBau.getM3().getH()) % p;
-            b4 = (b4 * phieuBau.getM4().getH()) % p;
-
-            System.out.println("*** : b1 = "+b1);
-            System.out.println("*** : b2 = "+b2);
-            System.out.println("*** : b3 = "+b3);
-            System.out.println("*** : b4 = "+b4);
 
             System.out.println("*** : x1 = "+x1);
             System.out.println("*** : x2 = "+x2);
@@ -145,39 +164,27 @@ public class Main {
             System.out.println("*** : y4 = "+y4);
 
         }
-        double m11 = module(x1, b1, p); //X^a
-        double m12 = modInverse(m11, p); //nghich dao X^a
-        double m1 = (y1 * m12) % p; // m: ban ro
+        double m12 = modInverse(y1, p); //nghich dao Y
+        double m1 = (x1 * m12) % p; // m: ban ro
 
-
-        System.out.println("*** : m11 = "+m11);
         System.out.println("*** : m12 = "+m12);
         System.out.println("*** : m1 = "+m1);
 
-        double m21 = module(x2, b2, p);
-        double m22 = modInverse(m21, p);
-        double m2 = (y2 * m22) % p;
+        double m22 = modInverse(y2, p);
+        double m2 = (x2 * m22) % p;
 
-
-        System.out.println("*** : m21 = "+m21);
         System.out.println("*** : m22 = "+m22);
         System.out.println("*** : m2 = "+m2);
 
-        double m31 = module(x3, b3, p);
-        double m32 = modInverse(m31, p);
-        double m3 = (y3 * m32) % p;
+        double m32 = modInverse(y3, p);
+        double m3 = (x3 * m32) % p;
 
-
-        System.out.println("*** : m31 = "+m31);
         System.out.println("*** : m32 = "+m32);
         System.out.println("*** : m3 = "+m3);
 
-        double m41 = module(x4, b4, p);
-        double m42 = modInverse(m41, p);
-        double m4 = (y4 * m42) % p;
+        double m42 = modInverse(y4, p);
+        double m4 = (x4 * m42) % p;
 
-
-        System.out.println("*** : m41 = "+m41);
         System.out.println("*** : m42 = "+m42);
         System.out.println("*** : m4 = "+m4);
 
@@ -257,10 +264,10 @@ public class Main {
                 select2 = 10;
             }
             switch (select2) {
-                case 1 -> bauChon(1, 0, 0, 0);
-                case 2 -> bauChon(0, 1, 0, 0);
-                case 3 -> bauChon(0, 0, 1, 0);
-                case 4 -> bauChon(0, 0, 0, 1);
+                case 1 -> bauChon(i,1, 0, 0, 0);
+                case 2 -> bauChon(i,0, 1, 0, 0);
+                case 3 -> bauChon(i,0, 0, 1, 0);
+                case 4 -> bauChon(i,0, 0, 0, 1);
                 case 0 -> System.out.println("___Exit___");
                 default -> System.out.println("Ứng viên không tồn tại, vui lòng chọn lại");
             }
@@ -281,8 +288,10 @@ public class Main {
         return x + 1;
     }
 
-    private static void bauChon(int a, int b, int c, int d) {
-        PhieuBau mA = new PhieuBau(messageChild(a), messageChild(b), messageChild(c), messageChild(d));
+    private static void bauChon(int i,int a, int b, int c, int d) {
+        CuTri ct = dsKhoaRieng.get(i);
+        PhieuBau mA = new PhieuBau(messageChild(ct.getA1(), ct.getA2(), a,h1,h2), messageChild(ct.getA1(), ct.getA3(),b,h1,h3)
+                , messageChild(ct.getA2(), ct.getA3(),c,h2,h3), messageChild(ct.getA1(), ct.getA4(),d,h1,h4));
         dsPhieuBau.add(mA);
     }
 
@@ -298,14 +307,10 @@ public class Main {
         return num3 % p;
     }
 
-    private static MaHoa messageChild(int v) {
+    private static MaHoa messageChild(int xi,int yi,int v,double x,double y) {
         int k = randomNumber();
-        inputNguyenTo(30);
-        int rnd = new Random().nextInt(dsNguyenTo.size() - 1);
-        int a = dsNguyenTo.get(rnd);
-        double h = power(g, a, p);
-        MaHoa m = new MaHoa(power(g, k, p), power3(a, k, g, v, p),h);
-        System.out.println("*** : v = "+v+" a = "+a+" h = "+h+" k = "+k+" x = "+power(g, k, p)+" y = "+power3(a, k, g, v, p));
+        MaHoa m = new MaHoa(power3(x, yi, g, v, p),power((int) y, xi, p));
+        System.out.println("*** : v = "+v+" x = "+x+" xi = "+xi+" yi = "+yi+" y = "+y+" mi = "+power3(x, yi, g, v, p)+" hi = "+power((int) y, xi, p));
         return m;
     }
 
